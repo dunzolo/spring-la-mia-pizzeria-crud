@@ -9,19 +9,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class PizzaController {
 	@Autowired
-	private PizzaService pizzService;
+	private PizzaService pizzaService;
 	
 	@GetMapping("/")
 	public String getHome(Model model) {
 		
-		List<Pizza> pizza_list = pizzService.findAllPizza();
+		List<Pizza> pizza_list = pizzaService.findAllPizza();
 		
 		model.addAttribute("pizzaList", pizza_list);
+		
+		return "index";
+	}
+	
+	@PostMapping("/pizza/nome")
+	public String getBookByTitle(Model model, @RequestParam(required = false) String nome) {
+		
+		List<Pizza> pizza_list = pizzaService.findByNome(nome);
+		model.addAttribute("pizzaList", pizza_list);
+		model.addAttribute("nome", nome);
 		
 		return "index";
 	}
@@ -30,11 +43,25 @@ public class PizzaController {
 	public String getPizza(Model model,
 			@PathVariable("id") int id) {
 		
-		Optional<Pizza> optPizza = pizzService.findPizzaById(id);
+		Optional<Pizza> optPizza = pizzaService.findPizzaById(id);
 		Pizza pizza = optPizza.get();
 		
 		model.addAttribute("pizza", pizza);
 		
 		return "single-pizza";
+	}
+	
+	@GetMapping("/pizza/create")
+	public String createPizza() {
+		
+		return "create-pizza";
+	}
+	
+	@PostMapping("/pizza/create")
+	public String storePizza(@ModelAttribute Pizza pizza) {
+		
+		pizzaService.savePizza(pizza);
+		
+		return "redirect:/";
 	}
 }

@@ -9,7 +9,15 @@
 	<div class="container mt-5">
 		<div class="row border border-dark pt-5 pb-5">
 			<h1 class="text-center">Le mie pizze</h1>
-			<div class="col d-flex justify-content-center text-center"  th:each="pizza : ${pizzaList}" th:object="${pizza}">
+			<div class="col d-flex justify-content-center my-3">
+				<a class="btn btn-primary" th:href="@{/pizza/create}">Aggiungi nuova pizza</a>
+			</div>
+			<form class="text-center" th:action="@{/pizza/nome}" method="POST">
+				<label>Nome</label>
+				<input type="text" name="nome" th:value="${nome}">
+				<input type="submit" value="Cerca">
+			</form>
+			<div class="col mt-3 d-flex justify-content-center text-center"  th:each="pizza : ${pizzaList}" th:object="${pizza}">
 				<div class="card" style="width: 18rem;">
 				  <div class="card-body">
 				    <h5 class="card-title">[[ *{nome} ]]</h5>
@@ -17,8 +25,8 @@
 				  </div>
 				</div>
 			</div>
+			<h2 th:if="${pizzaList.isEmpty()}">Non sono presenti pizze</h2>
 		</div>
 	</div>
-	<h2 th:if="${pizzaList.isEmpty()}">Non sono presenti pizze</h2>
 </body>
 </html>
