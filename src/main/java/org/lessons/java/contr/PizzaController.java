@@ -64,4 +64,39 @@ public class PizzaController {
 		
 		return "redirect:/";
 	}
+	
+	@GetMapping("/pizza/delete/{id}")
+	public String deletePizza(
+			@PathVariable int id
+		) {
+		
+		Optional<Pizza> pizzaOpt = pizzaService.findPizzaById(id);
+		Pizza pizza = pizzaOpt.get();
+		pizzaService.deletePizza(pizza);
+		
+		return "redirect:/";
+	}
+	
+	@GetMapping("/pizza/edit/{id}")
+	public String editPizza(
+			Model model,
+			@PathVariable int id
+		) {
+		
+		Optional<Pizza> pizzaOpt = pizzaService.findPizzaById(id);
+		Pizza pizza = pizzaOpt.get();
+		model.addAttribute("pizza", pizza);
+		
+		return "edit-pizza";
+	}
+	@PostMapping("/pizza/edit/{id}")
+	public String editPizza(
+			@PathVariable int id,
+			@ModelAttribute Pizza pizza
+		) {
+		
+		pizzaService.savePizza(pizza);
+		
+		return "redirect:/";
+	}
 }
