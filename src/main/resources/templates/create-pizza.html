@@ -5,7 +5,7 @@
 <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
 <title>Insert title here</title>
 </head>
-<body>
+<body th:object="${pizza}">
 	<div class="container mt-5">
 		<div class="row border border-dark pt-5 pb-5">
 			<h1 class="text-center">Aggiungi una nuova pizza</h1>
@@ -13,19 +13,43 @@
 				<form class="w-50" method="POST">
 				  <div class="mb-3">
 				    <label class="form-label">Nome</label>
-				    <input type="text" class="form-control" name="nome">
+				    <input type="text" class="form-control" name="nome" th:value="*{nome}">
+				    <label 
+				    	style="color: red" 
+				    	class="form-label"
+				    	th:if="${errors != null && errors.hasFieldErrors('nome')}">
+				    	[[ ${errors.getFieldError('nome').defaultMessage} ]]
+			    	</label>
 				  </div>
 				  <div class="mb-3">
 				    <label class="form-label">Descrizione</label>
-				    <input type="text" class="form-control" name="descrizione">
+				    <input type="text" class="form-control" name="descrizione" th:value="*{descrizione}">
+				    <label 
+				    	style="color: red" 
+				    	class="form-label"
+				    	th:if="${errors != null && errors.hasFieldErrors('descrizione')}">
+				    	[[ ${errors.getFieldError('descrizione').defaultMessage} ]]
+			    	</label>
 				  </div>
 				  <div class="mb-3">
 				    <label class="form-label">URL Foto</label>
-				    <input type="text" class="form-control" name="foto">
+				    <input type="text" class="form-control" name="foto" th:value="*{foto}">
+				    <label 
+				    	style="color: red" 
+				    	class="form-label"
+				    	th:if="${errors != null && errors.hasFieldErrors('foto')}">
+				    	[[ ${errors.getFieldError('foto').defaultMessage} ]]
+			    	</label>
 				  </div>
 				  <div class="mb-3">
 				    <label class="form-label">Prezzo</label>
-				    <input type="number" class="form-control" name="prezzo">
+				    <input type="number" class="form-control" name="prezzo" th:value="*{prezzo}">
+				    <label 
+				    	style="color: red" 
+				    	class="form-label"
+				    	th:if="${errors != null && errors.hasFieldErrors('prezzo')}">
+				    	[[ ${errors.getFieldError('prezzo').defaultMessage} ]]
+			    	</label>
 				  </div>
 				  <button type="submit" class="btn btn-primary">Aggiungi</button>
 				</form>

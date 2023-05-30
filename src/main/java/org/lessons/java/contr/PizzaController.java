@@ -8,11 +8,15 @@ import org.lessons.java.serv.PizzaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import jakarta.validation.Valid;
 
 @Controller
 public class PizzaController {
@@ -52,13 +56,34 @@ public class PizzaController {
 	}
 	
 	@GetMapping("/pizza/create")
-	public String createPizza() {
+	public String createPizza(Model model) {
+		
+		model.addAttribute("pizza", new Pizza());
 		
 		return "create-pizza";
 	}
 	
 	@PostMapping("/pizza/create")
-	public String storePizza(@ModelAttribute Pizza pizza) {
+	public String storePizza(
+			Model model,
+			@Valid @ModelAttribute Pizza pizza,
+			BindingResult bindingResult) {
+		
+		if(bindingResult.hasErrors()) {
+			//non è necessario
+			//for(ObjectError err : bindingResult.getAllErrors()) {
+			//	System.err.println("Error: " + err.getDefaultMessage());
+			//}
+			
+			model.addAttribute("pizza", pizza);
+			model.addAttribute("errors", bindingResult);
+			
+			//queste righe le riporto nel file HTML
+			//if(bindingResult.hasFieldErrors("nome"))
+			//bindingResult.getFieldError("nome").getDefaultMessage();
+			
+			return "create-pizza";
+		}
 		
 		pizzaService.savePizza(pizza);
 		
@@ -89,11 +114,30 @@ public class PizzaController {
 		
 		return "edit-pizza";
 	}
+	
 	@PostMapping("/pizza/edit/{id}")
 	public String editPizza(
+			Model model,
 			@PathVariable int id,
-			@ModelAttribute Pizza pizza
+			@Valid @ModelAttribute Pizza pizza,
+			BindingResult bindingResult
 		) {
+		
+		if(bindingResult.hasErrors()) {
+			//non è necessario
+			//for(ObjectError err : bindingResult.getAllErrors()) {
+			//	System.err.println("Error: " + err.getDefaultMessage());
+			//}
+			
+			model.addAttribute("pizza", pizza);
+			model.addAttribute("errors", bindingResult);
+			
+			//queste righe le riporto nel file HTML
+			//if(bindingResult.hasFieldErrors("nome"))
+			//bindingResult.getFieldError("nome").getDefaultMessage();
+			
+			return "edit-pizza";
+		}
 		
 		pizzaService.savePizza(pizza);
 		
